@@ -36,6 +36,7 @@ compile_qatzip() {
 compile_nginx() {
     echo "Recompile Nginx"
     cd $NG_ROOT
+    make clean
     ldconfig
 
 case $1 in
