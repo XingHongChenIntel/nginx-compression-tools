@@ -1,7 +1,7 @@
 #!/bin/sh
 
-ps aux | grep 'nginx: master process' | grep -v 'grep' | awk '{print $2}' | xargs kill
-sleep 3
+ps aux | grep 'nginx: master process' | grep -v 'grep' | awk '{print $2}' | xargs kill &
+sleep 5
 
 echo "kill old worker process"
 # ./recompile.sh nginx
