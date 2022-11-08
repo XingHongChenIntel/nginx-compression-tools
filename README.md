@@ -21,3 +21,6 @@ There are three part of suit.
 
 The report will be generate in performance file.
 And please don't change the dictionary structure.
+
+update drvier
+$QZ_TOOL/install_drv/install_upstream.sh

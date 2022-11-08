@@ -3,25 +3,27 @@ source ./env_export.sh
 
 # TESTFILE=(4K_index.html 8K_index.html 16K_index.html 32K_index.html \
 #           64K_index.html 128K_index.html 256K_index.html 512K_index.html calgary.html)
-TESTFILE=(64K_index.html)
+TESTFILE=(4K_index.html)
 
 # WORKNUM=(1 2 4 8 16 32 36 48 64 112)
 # REQUEST=(5000 8000 10000 10000 30000 30000 30000 200000 200000 2000000)
 # CLIENT=(1000 1000 4000 4000 6000 6000 8000 5000 5000 3000)
-# WORKNUM=(112)
-# REQUEST=(200000)
-# CLIENT=(8000)
-WORKNUM=(1)
-REQUEST=(10000)
-CLIENT=(1000)
+WORKNUM=(1 2 4 8 16 32)
+REQUEST=(100000 100000 100000 100000 100000 100000)
+CLIENT=(100 100 100 100 100 100)
+FORKP=(2 4 8 16 32 32)
+# WORKNUM=(32)
+# REQUEST=(10000)
+# CLIENT=(100)
+# FORKP=(32)
 
 # COM_PATH=(no gzip qatzip qatzip-zstd zstd zstd-qat)
-COM_PATH=(gzip)
+COM_PATH=(zstd)
 
 function Test_pipeline() {
     # worker number / test file / compression path
     ./update_nginx_conf.sh $2 $3 $1
-    ./restart_nginx.sh
+    ./restart_nginx.sh $2
     ./start_client.sh "$4"
 }
 
@@ -31,25 +33,25 @@ function Test_pipeline() {
 function ab_params_conf() {
 case $1 in
     no)
-        params="ab -n $2 -c $3 -r "
+        params="taskset -c 1-$4 $AB_PATH/ab -n $2 -c $3 -W $4 -r "
     ;;
     gzip)
-        params="ab -n $2 -c $3 -r -H \"Accept-Encoding:gzip\" "
+        params="taskset -c 1-$4 $AB_PATH/ab -n $2 -c $3 -W $4 -r -H \"Accept-Encoding:gzip\" "
     ;;
     qatzip)
-        params="ab -n $2 -c $3 -r -H \"Accept-Encoding:gzip\" "
+        params="taskset -c 1-$4 $AB_PATH/ab -n $2 -c $3 -W $4 -r -H \"Accept-Encoding:gzip\" "
     ;;
     qatzip-zstd)
-        params="ab -n $2 -c $3 -r -H \"Accept-Encoding:zstd\" "
+        params="taskset -c 1-$4 $AB_PATH/ab -n $2 -c $3 -W $4 -r -H \"Accept-Encoding:zstd\" "
     ;;
     zstd)
-        params="ab -n $2 -c $3 -r -H \"Accept-Encoding:zstd\" "
+        params="taskset -c 1-$4 $AB_PATH/ab -n $2 -c $3 -W $4 -r -H \"Accept-Encoding:zstd\" "
     ;;
     zstd-qat)
-        params="ab -n $2 -c $3 -r -H \"Accept-Encoding:zstd\" "
+        params="taskset -c 1-$4 $AB_PATH/ab -n $2 -c $3 -W $4 -r -H \"Accept-Encoding:zstd\" "
     ;;
     *)  echo "client ab params nothing apointed"
-        params="ab -n $2 -c $3 -r -H \"Accept-Encoding:gzip\" "
+        params="taskset -c 1-$4 $AB_PATH/ab -n $2 -c $3 -W $4 -r -H \"Accept-Encoding:gzip\" "
     ;;
 esac
     echo $params
@@ -67,7 +69,7 @@ function Build_pipeline() {
 
             echo ";;;;;;;;;;;;;; The work number is ${WORKNUM[i]} ;;;;;;;;;;;;;;" >> ./performance/performance_report.log
 
-            ab_params=$(ab_params_conf $1 ${REQUEST[i]} ${CLIENT[i]})
+            ab_params=$(ab_params_conf $1 ${REQUEST[i]} ${CLIENT[i]} ${FORKP[i]})
             echo $ab_params
             Test_pipeline $1 ${WORKNUM[i]} $f "$ab_params"
         done;

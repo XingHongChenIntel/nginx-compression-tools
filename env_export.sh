@@ -16,11 +16,13 @@ mkdir -p ${TOP_ROOT}/build/qatzip
 mkdir -p ${TOP_ROOT}/performance
 
 # configure server port and ip
-HOSTIP="http://10.67.111.153:8081/"
+HOSTIP=(http://192.168.2.100:8081/  http://192.168.5.100:8081/ http://192.168.6.100:8081/)
+# HOSTIP=(http://192.168.6.100:8081/)
 
 # configure client port and ip
-# IP_SET=(10.67.110.232 10.67.111.136 10.67.110.221)
-IP_SET=(10.67.110.232)
+IP_SET=(10.67.110.232 10.67.111.136 10.67.110.221)
+# IP_SET=(10.67.110.221)
 USER=root
 PSWORD=tester
-AB_PATH="/home/ApacheBench-ab/"
+AB_PATH="/home/xinghong/ApacheBench-ab/"
+#export LD_LIBRARY_PATH=/home/xinghong/ApacheBench-ab/apr/apr-build/lib:/home/xinghong/ApacheBench-ab/apr/aprutil-build/lib:$LD_LIBRARY_PATH
