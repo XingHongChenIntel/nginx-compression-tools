@@ -6,7 +6,7 @@ sleep 5
 echo "kill old worker process"
 # ./recompile.sh nginx
 
-numactl -C 100-$(($1+99)) ./build/nginx/sbin/nginx
+numactl -C 50-$(($1+49)) ./build/nginx/sbin/nginx
 WK_PID=(`ps aux | grep 'nginx: worker process' | grep -v 'grep' | awk '{print $2}'`)
 echo ${WK_PID[@]}
 

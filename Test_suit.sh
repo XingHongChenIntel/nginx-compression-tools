@@ -5,20 +5,15 @@ source ./env_export.sh
 #           64K_index.html 128K_index.html 256K_index.html 512K_index.html calgary.html)
 TESTFILE=(4K_index.html)
 
-# WORKNUM=(1 2 4 8 16 32 36 48 64 112)
-# REQUEST=(5000 8000 10000 10000 30000 30000 30000 200000 200000 2000000)
-# CLIENT=(1000 1000 4000 4000 6000 6000 8000 5000 5000 3000)
-WORKNUM=(1 2 4 8 16 32)
-REQUEST=(100000 100000 100000 100000 100000 100000)
-CLIENT=(100 100 100 100 100 100)
-FORKP=(2 4 8 16 32 32)
-# WORKNUM=(32)
-# REQUEST=(10000)
-# CLIENT=(100)
-# FORKP=(32)
-
 # COM_PATH=(no gzip qatzip qatzip-zstd zstd zstd-qat)
-COM_PATH=(zstd)
+COM_PATH=(qatzip)
+
+# The different path and data should have diff REQ and Forkp
+WORKNUM=(1 2 4 8 16 32 36 48 64)
+REQUEST=(50000 50000 50000 50000 50000 50000 50000 50000 50000)
+CLIENT=(100 100 100 100 100 100 100 100 100)
+FORKP=(1 2 4 8 16 32 36 48 64)
+
 
 function Test_pipeline() {
     # worker number / test file / compression path
