@@ -24,3 +24,8 @@ And please don't change the dictionary structure.
 
 update drvier
 $QZ_TOOL/install_drv/install_upstream.sh
+
+client machine
+#export LD_LIBRARY_PATH=/home/xinghong/ApacheBench-ab/apr/apr-build/lib:/home/xinghong/ApacheBench-ab/apr/aprutil-build/lib:$LD_LIBRARY_PATH
+
+export ICP_ROOT=

@@ -25,16 +25,32 @@ done
 
 wait
 
+TEMP=0
+SUM_REQ=0
+SUM_THR=0
+
 date +%F-%T >> ./performance/performance_report.log
 for IP in ${IP_SET[@]};do
     echo $IP >> ./performance/performance_report.log
-    awk '/^Requests per second:/{print $4}' ./performance/${IP}_test.log | awk '{sum+=$1}END{print "-------------------- SUM------------------\n\
-    The Totle CPS is == ",sum}' >> ./performance/performance_report.log
-    awk '/^Transfer rate:/{print $3}' ./performance/${IP}_test.log | awk '{sum+=$1}END{print "The Totle throughput is == ",sum}' >> ./performance/performance_report.log
+
+    TEMP=`awk '/^Requests per second:/{print $4}' ./performance/${IP}_test.log | awk '{sum+=$1}END{print sum}'`
+    SUM_REQ=`echo "$TEMP + $SUM_REQ" | bc`
+
+    awk '/^Requests per second:/{print $4}' ./performance/${IP}_test.log | awk -v result=$TEMP '{sum+=$1}END{print "-------------------- SUM------------------\n\
+    The Totle CPS is == ",sum; $result=sum}' >> ./performance/performance_report.log
+
+    TEMP=`awk '/^Transfer rate:/{print $3}' ./performance/${IP}_test.log | awk '{sum+=$1}END{printf("%d", sum)}'`
+    SUM_THR=`echo "$TEMP + $SUM_THR" | bc`
+
+    awk '/^Transfer rate:/{print $3}' ./performance/${IP}_test.log | awk '{sum+=$1}END{printf("The Totle throughput is == %d\n", sum)}' >> ./performance/performance_report.log
 done
 
-for IP in ${IP_SET[@]};do
-    echo $IP >> ./performance/performance_report.log
-    awk '/^Requests per second:|^Transfer rate:/ {print $0}' ./performance/${IP}_test.log >> ./performance/performance_report.log
-done
+echo "9999999999999999999999999999999999999999999999" >> ./performance/performance_report.log
+echo "FUCKFUCKFUCKFUCKFUCKFUCKFUCKFUCK!!!!!!!!!! CPS is " $SUM_REQ >> ./performance/performance_report.log
+echo "FUCKFUCKFUCKFUCKFUCKFUCKFUCKFUCK!!!!!!!!!! Throughput is " $SUM_THR >> ./performance/performance_report.log
+
+# for IP in ${IP_SET[@]};do
+#     echo $IP >> ./performance/performance_report.log
+#     awk '/^Requests per second:|^Transfer rate:/ {print $0}' ./performance/${IP}_test.log >> ./performance/performance_report.log
+# done
 echo "Client execute done!"

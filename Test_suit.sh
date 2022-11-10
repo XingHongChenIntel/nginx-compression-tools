@@ -3,16 +3,21 @@ source ./env_export.sh
 
 # TESTFILE=(4K_index.html 8K_index.html 16K_index.html 32K_index.html \
 #           64K_index.html 128K_index.html 256K_index.html 512K_index.html calgary.html)
-TESTFILE=(4K_index.html)
+# TESTFILE=(16K_index.html 32K_index.html 64K_index.html 128K_index.html 256K_index.html 512K_index.html calgary.html)
+TESTFILE=(128K_index.html)
 
 # COM_PATH=(no gzip qatzip qatzip-zstd zstd zstd-qat)
-COM_PATH=(qatzip)
+COM_PATH=(qatzip-zstd)
 
 # The different path and data should have diff REQ and Forkp
-WORKNUM=(1 2 4 8 16 32 36 48 64)
-REQUEST=(50000 50000 50000 50000 50000 50000 50000 50000 50000)
-CLIENT=(100 100 100 100 100 100 100 100 100)
-FORKP=(1 2 4 8 16 32 36 48 64)
+REQUEST=(20000)
+CLIENT=100
+# WORKNUM=(1 2 4 8 16 32 36 48 64 112)
+# FORKP=(1 2 4 8 16 32 36 48 64 90)
+# WORKNUM=(1 2 4 8 16)
+# FORKP=(1 2 4 8 16)
+WORKNUM=(64)
+FORKP=(64)
 
 
 function Test_pipeline() {
@@ -56,17 +61,18 @@ function Build_pipeline() {
 
     echo "!!!!!!!!!!!!!!! The path is $1 !!!!!!!!!!!!!!!" >> ./performance/performance_report.log
 
-    for f in ${TESTFILE[@]};do
+    for ((j=0; j<${#TESTFILE[@]}; j++));do
 
-        echo "############### The test file is $f ###############" >> ./performance/performance_report.log
+        echo "############### The test file is ${TESTFILE[j]} ###############" >> ./performance/performance_report.log
 
         for(( i=0; i<${#WORKNUM[@]}; i++)); do
 
             echo ";;;;;;;;;;;;;; The work number is ${WORKNUM[i]} ;;;;;;;;;;;;;;" >> ./performance/performance_report.log
 
-            ab_params=$(ab_params_conf $1 ${REQUEST[i]} ${CLIENT[i]} ${FORKP[i]})
+            # ab_params=$(ab_params_conf $1 ${REQUEST[i]} ${CLIENT[i]} ${FORKP[i]})
+            ab_params=$(ab_params_conf $1 ${REQUEST[j]} $CLIENT ${FORKP[i]})
             echo $ab_params
-            Test_pipeline $1 ${WORKNUM[i]} $f "$ab_params"
+            Test_pipeline $1 ${WORKNUM[i]} ${TESTFILE[j]} "$ab_params"
         done;
     done;
 }
@@ -86,4 +92,4 @@ for job in ${COM_PATH[@]};do
     Build_pipeline $job
 done
 
-rm -rf ./build/nginx/logs
+# rm -rf ./build/nginx/logs
