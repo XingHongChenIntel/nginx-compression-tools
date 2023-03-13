@@ -9,8 +9,7 @@ compile_qatzip() {
     ./configure \
     --prefix=${TOP_ROOT}/build/qatzip \
     --with-ICP_ROOT=$ICP_ROOT \
-    --enable-debug \
-    --enable-symbol --enable-lz4s-postprocessing
+    --enable-lz4s-postprocessing
 
 
     ## For intree
