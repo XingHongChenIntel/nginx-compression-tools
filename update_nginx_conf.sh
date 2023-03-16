@@ -19,7 +19,7 @@ function insert_load_module() {
 
 function insert_http_conf() {
     echo $1
-    sed -i "/keepalive_timeout/a\ $1" $F_TEMP
+    sed -i "/default_type/a\ $1" $F_TEMP
 }
 
 # Gzip SW       : Async nignx  -->  ngx_http_gzip_filter_module --> zlib
