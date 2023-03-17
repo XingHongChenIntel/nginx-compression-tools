@@ -103,8 +103,8 @@ case $1 in
         --with-http_ssl_module \
         --without-http_gzip_module \
         --add-module=$ZSTD_MODULE_PATH \
-        --with-cc-opt="-DNGX_SECURE_MEM -I$ZSTD_QAT_PATH/lib -Wno-error=deprecated-declarations" \
-        --with-ld-opt="-Wl,-rpath=$ZSTD_QAT_PATH/lib -L$ZSTD_QAT_PATH/lib -lzstd"
+        --with-cc-opt="-DNGX_SECURE_MEM -I$ICP_ROOT/quickassist/include -I$ICP_ROOT/quickassist/include/dc -I$ZSTD_ROOT/lib -I$ZSTD_QAT_PATH/src -Wno-error=deprecated-declarations" \
+        --with-ld-opt="-Wl,-rpath=$ZSTD_ROOT/lib -L$ZSTD_ROOT/lib -lzstd -lqat_s -lusdm_drv_s -L$ZSTD_QAT_PATH/src -l:libqatseqprod.a"
     ;;
 
     *)  echo "recompile nginx nothing apointed"

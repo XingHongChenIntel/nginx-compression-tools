@@ -40,7 +40,8 @@ function enable(){
 function print_t(){
 	for ((i=0; i<${#control_file_names[@]}; i++))
 	do
-		cat ${control_file_names[$i]}/device_data
+		cat ${control_file_names[$i]}/device_data | grep util_cpr
+		# cat ${control_file_names[$i]}/device_data
 	done
 }
 

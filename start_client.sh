@@ -88,8 +88,10 @@ function count_performance() {
     done
 
     echo "-------------------- SUM------------------" >> ./performance/performance_report.log
-    echo "CPS is " $SUM_REQ >> ./performance/performance_report.log
+    echo "RPS is " $SUM_REQ >> ./performance/performance_report.log
     echo "Throughput is " $SUM_THR $VAR >> ./performance/performance_report.log
+
+    echo $SUM_REQ  $SUM_THR $VAR >> ./performance/performance_report_summary.log
     # for IP in ${IP_SET[@]};do
     #     echo $IP >> ./performance/performance_report.log
     #     awk '/^Requests per second:|^Transfer rate:/ {print $0}' ./performance/${IP}_test.log >> ./performance/performance_report.log
