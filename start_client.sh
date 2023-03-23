@@ -69,7 +69,7 @@ function count_performance() {
     for IP in ${IP_SET[@]};do
         echo $IP >> ./performance/performance_report.log
 
-        TEMP=`awk '/^Requests\/sec:/{print $2}' ./performance/${IP}_test.log | awk '{sum+=$1}END{print sum}'`
+        TEMP=`awk '/^Requests\/sec:/{print $2}' ./performance/${IP}_test.log`
         # TEMP=`awk '/^Requests per second:/{print $4}' ./performance/${IP}_test.log | awk '{sum+=$1}END{print sum}'`
         SUM_REQ=`echo "$TEMP + $SUM_REQ" | bc`
 
