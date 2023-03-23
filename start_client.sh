@@ -34,7 +34,7 @@ esac
 function wrk_params_conf() {
 case $1 in
     no)
-        params="taskset -c 1-$4 $WRK_PATH/wrk -c $3 -t $4 -d15s -H \"Accept-Encoding: gzip\" "
+        params="taskset -c 1-$4 $WRK_PATH/wrk -c $3 -t $4 -d15s "
     ;;
     gzip)
         params="taskset -c 1-$4 $WRK_PATH/wrk -c $3 -t $4 -d15s -H \"Accept-Encoding: gzip\" "
