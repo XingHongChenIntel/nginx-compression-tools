@@ -2,13 +2,12 @@
 
 # configure the server compile && build path
 export TOP_ROOT=`pwd`
-export NG_ROOT=/home/xinghong/applications.qat.shims.nginx.async-mode-nginx
-export QZ_ROOT=/home/xinghong/applications.qat.shims.qatzip.qatzip
+export NG_ROOT=/your/async-mode-nginx/path
+export QZ_ROOT=/your/qatzip/path
 
-export ZSTD_MODULE_PATH=/home/xinghong/zstd-nginx-module
-export ZSTD_QAT_PATH=/home/xinghong/applications.qat.shims.zstandard.source
-export ZSTD_ROOT=/home/xinghong/zstd
-export NG_CONF=${TOP_ROOT}/nginx_conf/gzip.nginx.conf
+export ZSTD_MODULE_PATH=/your/zstd-modlue/path
+export ZSTD_QAT_PATH=/your/zstd-plugin/path
+export ZSTD_ROOT=/your/zstd/path
 
 mkdir -p ${TOP_ROOT}/build/openssl
 mkdir -p ${TOP_ROOT}/build/nginx
@@ -16,13 +15,13 @@ mkdir -p ${TOP_ROOT}/build/qatzip
 mkdir -p ${TOP_ROOT}/performance
 
 # configure server port and ip
-HOSTIP=(http://192.168.2.100:8081/  http://192.168.5.100:8081/ http://192.168.6.100:8081/)
-# HOSTIP=(http://192.168.6.100:8081/)
+HOSTIP=(put your host IP here, you can put multi-host)
 
 # configure client port and ip
-IP_SET=(10.67.110.232 10.67.111.136 10.67.110.221)
-# IP_SET=(10.67.110.221)
+IP_SET=(put your client here, its number must equel with host ip)
+
+# put your client wrk configure here
 USER=root
-PSWORD=tester
-AB_PATH="/home/xinghong/ApacheBench-ab/"
-#export LD_LIBRARY_PATH=/home/xinghong/ApacheBench-ab/apr/apr-build/lib:/home/xinghong/ApacheBench-ab/apr/aprutil-build/lib:$LD_LIBRARY_PATH
+PSWORD=your/passwork
+AB_PATH="your AB path"
+WRK_PATH="your wrk path"

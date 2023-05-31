@@ -1,28 +1,27 @@
 #!/bin/bash
 source ./env_export.sh
 
-# TESTFILE=(16K_index.html 32K_index.html 64K_index.html 128K_index.html 256K_index.html 512K_index.html calgary.html)
-# TESTFILE=(4K_index.html 8K_index.html 16K_index.html 32K_index.html 64K_index.html 128K_index.html)
-TESTFILE=(4K_index.html)
+TESTFILE=(put your all html file here)
+COM_PATH=(no gzip qatzip zstd zstd-qat)
 
-# COM_PATH=(no gzip qatzip qatzip-zstd zstd zstd-qat)
-COM_PATH=(gzip)
+# It should be relative with test file size
+# This is for AB client, it means the totally request you want send.
+REQUEST=(10 10 10 10 10)
+# This is for keep-alive connenction, means how many connection you want to keep.
+CLIENT=(200 200 200 200 200)
 
-echo "          " >> ./performance/performance_report.log
 # The different path and data should have diff REQ and Forkp
-REQUEST=(10)
-CLIENT=(200)
+# This is for client, how many thread, you want to use
+FORKP=(36 36 36 36 36 36 36 36 36 48)
+# This is nginx worker process number
+WORKNUM=(1 2 4 8 16 32 36 48 64 112)
 
-WORKNUM=(1)
-FORKP=(4)
-# REQUEST=(3500 3000 2500 2000 1500 1000)
-# REQUEST=(25000 20000 15000 8000 5000 2000)
-# WORKNUM=(1 2 4 8 16 32 36 48 64 112)
-# FORKP=(1 2 4 8 16 32 36 48 64 90)
+echo "     cxh     " > ./performance/performance_report.log
+echo "     cxh     " > ./performance/performance_report_summary.log
 
 function Test_pipeline() {
     # worker number / test file / compression path
-    # ./recompile.sh nginx $1
+    ./recompile.sh nginx $1
     ./update_nginx_conf.sh $2 $3 $1
     ./restart_nginx.sh $2
     ./start_client.sh $1 $4 $5 $6
@@ -51,14 +50,13 @@ function Build_pipeline() {
 # Gzip QAT      : Async nignx  -->  ngx_http_qatzip_filter_module --> qatzip lib --> stream API (DEFLATE_RAW)
 # ZSTD QAT    : Async nignx  -->  ngx_http_qatzip_filter_module --> qatzip lib --> stream API (LZ4S + postprocessing)
 # ZSTD SW      : Async nignx  -->  zstd-nginx-module --> zstd lib
-# ZSTD-PATCH    : Async nignx  -->  zstd-nginx-module --> zstd-qat lib
+# ZSTD-PATCH    : Async nignx  -->  zstd-nginx-module --> zstd-plugin lib
 
 # start whole process
 date +%F-%T >> ./performance/performance_report.log
 
 for job in ${COM_PATH[@]};do
     # compression path
-    ./recompile.sh nginx $job
     Build_pipeline $job
 done
 

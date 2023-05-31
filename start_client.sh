@@ -1,9 +1,6 @@
 #!/bin/bash
 source ./env_export.sh
 
-# ./ab -n 900000 -c 1000 -r -M http://10.67.111.164:8081/
-# ./ab -n 900000 -c 1000 -r -M -H "Accept-Encoding:gzip" http://10.67.111.164:8081/
-# ./ab -n 900000 -c 1000 -r -M -H "Accept-Encoding:zstd" http://10.67.111.164:8081/
 function ab_params_conf() {
 case $1 in
     no)
