@@ -4,6 +4,7 @@ source ./env_export.sh
 compile_qatzip() {
     echo "Recompile qatzip"
     cd $QZ_ROOT
+    git checkout master
 
     ./autogen.sh
     ./configure \
@@ -11,18 +12,32 @@ compile_qatzip() {
     --with-ICP_ROOT=$ICP_ROOT \
     --enable-lz4s-postprocessing
 
-
-    ## For intree
-    # ./configure \
-    # --prefix=$TOP_ROOT/build/qatzip \
-    # --enable-debug \
-    # --enable-symbol
-
-
     make clean
     make all -j
     make uninstall
     make install -j
+    cd $TOP_ROOT
+}
+
+compile_zstd() {
+    echo "Recompile zstd"
+    cd $ZSTD_ROOT
+    git checkout v1.5.4
+
+    make clean
+    make -j
+    rm -rf $ZSTD_ROOT/lib/libzstd.a
+    cd $TOP_ROOT
+}
+
+compile_plugin() {
+    echo "Recompile plugin"
+    cd $ZSTD_QAT_PATH
+    export ZSTDLIB=$ZSTD_ROOT/lib
+    git checkout main
+
+    make clean
+    make ENABLE_USDM_DRV=1
     cd $TOP_ROOT
 }
 
@@ -130,6 +145,14 @@ case $1 in
 
     nginx)
         compile_nginx $2
+    ;;
+
+    zstd)
+        compile_zstd
+    ;;
+
+    zstd-plugin)
+        compile_plugin
     ;;
 
     all)
